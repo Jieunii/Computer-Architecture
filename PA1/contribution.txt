@@ -1,0 +1,32 @@
+1. read_asm()
+입력파일을 파싱 -> 구조체에 저장 -> 연결리스트 이용
+
+- data region
+
+'.text'를 만나면 data를 읽는 부분이기 때문에 break
+':'를 만나면 temp_sym을 생성
+(temp_sym이 NULL아니면 InsertSym(연결리스트를 이용)을 통한 Sym 연결
+'.word'를 만나면
+  if => '.word' 다음에 있는 값을 확인하여 문자열을 숫자로 바꾼다.
+  if => temp_sym->first가 NULL이면 temp_data 삽입
+  else => NULL이 아니면 current_data를 통해 탐색하고 temp_data 연결
+address는 data를 추가할 때마다 증가
+
+- text region
+':'를 만나면 temp_sym 생성
+아닐 경우 temp_text 생성
+  if => 명령어 'la'를 만나면 lui와 ori를 통해 저장
+  else => inst구조체의 idx와 비교하면서 확인
+	각각의 type을 통해 s, t, d에 메모리 할당하고 저장
+
+- Symbols를 헤더라고 하면  Symbols에 temp_sym을 연결하고
+temp_sym의 Text부분에 temp_text를 연결하여 하나의 연결리스트를 만든다.
+
+2. subst_asm_to_num()
+Texts를 탐색하면서 Symbols에 저장된 sym->name과 일치하면 주소 변환
+그렇지 않으면 명령어와 type에 맞는 숫자로 변환 
+
+3. print_bits()
+숫자로 변환한 값들을 type에 맞게 순서를 정하여 출력
+data section은 마지막에 출력
+
